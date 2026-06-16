@@ -1,0 +1,452 @@
+/* ── Dark theme (default) ── */
+:root,
+[data-theme="dark"] {
+  --text: #b5a898;
+  --text-h: #e8ddd0;
+  --bg: #1c1612;
+  --bg-surface: #2a211a;
+  --bg-elevated: #352b22;
+  --border: #3d3229;
+  --border-light: #4a3d32;
+  --accent: #c4956a;
+  --accent-hover: #d4a574;
+  --accent-bg: rgba(196, 149, 106, 0.15);
+  --accent-border: rgba(196, 149, 106, 0.5);
+  --shadow:
+    rgba(0, 0, 0, 0.4) 0 10px 15px -3px, rgba(0, 0, 0, 0.25) 0 4px 6px -2px;
+
+  --header-bg: rgba(35, 27, 20, 0.95);
+  --header-bg-end: rgba(28, 22, 18, 0.95);
+  --header-border: #3d3229;
+  --dropdown-bg: #2a211a;
+  --dropdown-border: #4a3d32;
+  --dropdown-hover: #352b22;
+  --dropdown-text: #d4c8b8;
+  --menu-text: #a09080;
+  --menu-text-hover: #e8ddd0;
+  --avatar-gradient: linear-gradient(135deg, #c4956a, #8b6914);
+  --avatar-ring: rgba(196, 149, 106, 0.35);
+  --input-bg: #1c1612;
+  --input-border: #4a3d32;
+  --input-text: #e8ddd0;
+  --input-placeholder: #6b5d50;
+
+  --fc-line: #6b5d50;
+  --fc-line-active: #c4956a;
+  --fc-line-dim: #2a211a;
+  --fc-node-border: #6b5d50;
+  --fc-node-text: #8c7e6e;
+  --fc-completed-bg: #2a211a;
+  --fc-completed-border: #c4956a;
+  --fc-completed-text: #d4b896;
+  --fc-current-bg: #3d2b10;
+  --fc-current-border: #c4956a;
+  --fc-future-border: #4a3d32;
+  --fc-future-text: #6b5d50;
+  --fc-unreachable-border: #2a211a;
+  --fc-unreachable-text: #4a3d32;
+
+  color-scheme: dark;
+}
+
+/* ── Light theme ── */
+[data-theme="light"] {
+  --text: #5c4a3a;
+  --text-h: #2d1f14;
+  --bg: #faf6f1;
+  --bg-surface: #f0e8de;
+  --bg-elevated: #e8ddd0;
+  --border: #d9cdbf;
+  --border-light: #c9baa8;
+  --accent: #8b6914;
+  --accent-hover: #a07a1e;
+  --accent-bg: rgba(139, 105, 20, 0.1);
+  --accent-border: rgba(139, 105, 20, 0.4);
+  --shadow:
+    rgba(0, 0, 0, 0.08) 0 10px 15px -3px, rgba(0, 0, 0, 0.04) 0 4px 6px -2px;
+
+  --header-bg: rgba(61, 43, 31, 0.95);
+  --header-bg-end: rgba(50, 35, 25, 0.95);
+  --header-border: #5c4535;
+  --dropdown-bg: #f5ede4;
+  --dropdown-border: #d9cdbf;
+  --dropdown-hover: #e8ddd0;
+  --dropdown-text: #4a3728;
+  --menu-text: #ddd0c0;
+  --menu-text-hover: #fff;
+  --avatar-gradient: linear-gradient(135deg, #a07a1e, #6b4f10);
+  --avatar-ring: rgba(139, 105, 20, 0.35);
+  --input-bg: #fff;
+  --input-border: #d9cdbf;
+  --input-text: #2d1f14;
+  --input-placeholder: #a0896c;
+
+  --fc-line: #a0896c;
+  --fc-line-active: #8b6914;
+  --fc-line-dim: #d9cdbf;
+  --fc-node-border: #a0896c;
+  --fc-node-text: #7a6a58;
+  --fc-completed-bg: #f0e8de;
+  --fc-completed-border: #8b6914;
+  --fc-completed-text: #6b4f10;
+  --fc-current-bg: #f5e6c8;
+  --fc-current-border: #8b6914;
+  --fc-future-border: #c9baa8;
+  --fc-future-text: #a0896c;
+  --fc-unreachable-border: #e8ddd0;
+  --fc-unreachable-text: #c9baa8;
+
+  color-scheme: light;
+}
+
+:root {
+  --sans: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --heading: system-ui, 'Segoe UI', Roboto, sans-serif;
+  --mono: ui-monospace, Consolas, monospace;
+
+  font: 18px/145% var(--sans);
+  letter-spacing: 0.18px;
+  color: var(--text);
+  background: var(--bg);
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+
+  @media (max-width: 1024px) {
+    font-size: 16px;
+  }
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  transition: background 0.3s ease, color 0.3s ease;
+}
+
+#root {
+  width: 100%;
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+  box-sizing: border-box;
+}
+
+.page-form-centered {
+  max-width: 720px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* ── Module title ── */
+.module-title {
+  text-align: center;
+  font-family: var(--heading);
+  font-weight: 600;
+  font-size: 1.65rem;
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--accent);
+  margin-bottom: 0.25rem;
+  position: relative;
+  padding-bottom: 12px;
+}
+
+.module-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 3px;
+  background: var(--accent);
+  border-radius: 2px;
+  margin: 10px auto 0;
+  opacity: 0.6;
+}
+
+.module-subtitle {
+  text-align: center;
+  color: var(--text);
+  font-size: 0.85rem;
+  letter-spacing: 0.5px;
+  opacity: 0.7;
+  margin-bottom: 0;
+}
+
+.module-header {
+  margin-bottom: 1.75rem;
+}
+
+
+h1,
+h2 {
+  font-family: var(--heading);
+  font-weight: 500;
+  color: var(--text-h);
+}
+
+h1 {
+  font-size: 56px;
+  letter-spacing: -1.68px;
+  margin: 32px 0;
+  @media (max-width: 1024px) {
+    font-size: 36px;
+    margin: 20px 0;
+  }
+}
+h2 {
+  font-size: 24px;
+  line-height: 118%;
+  letter-spacing: -0.24px;
+  margin: 0 0 8px;
+  @media (max-width: 1024px) {
+    font-size: 20px;
+  }
+}
+p {
+  margin: 0;
+}
+
+code,
+.counter {
+  font-family: var(--mono);
+  display: inline-flex;
+  border-radius: 4px;
+  color: var(--text-h);
+}
+
+code {
+  font-size: 15px;
+  line-height: 135%;
+  padding: 4px 8px;
+  background: var(--bg-surface);
+}
+
+/* ═══════════════════════════════════════════════
+   Bootstrap utility overrides — theme-aware
+   ═══════════════════════════════════════════════ */
+
+/* Both themes: remap Bootstrap color utilities to CSS variables */
+.text-white {
+  color: var(--text-h) !important;
+}
+
+.text-light {
+  color: var(--text) !important;
+}
+
+.text-secondary {
+  color: var(--text) !important;
+  opacity: 0.72;
+}
+
+.bg-dark {
+  background-color: var(--bg-surface) !important;
+}
+
+.border-secondary {
+  border-color: var(--border) !important;
+}
+
+/* Tables */
+.table-dark {
+  --bs-table-bg: var(--bg-surface);
+  --bs-table-color: var(--text-h);
+  --bs-table-border-color: var(--border);
+  --bs-table-striped-bg: var(--bg-elevated);
+  --bs-table-hover-bg: var(--bg-elevated);
+  --bs-table-hover-color: var(--text-h);
+}
+
+.table-dark thead tr.text-secondary {
+  opacity: 0.72;
+}
+
+/* Form controls */
+.form-control.bg-dark,
+.form-select.bg-dark {
+  background-color: var(--input-bg) !important;
+  color: var(--input-text) !important;
+  border-color: var(--input-border) !important;
+}
+
+.form-control.bg-dark:focus,
+.form-select.bg-dark:focus {
+  background-color: var(--input-bg) !important;
+  border-color: var(--accent) !important;
+  box-shadow: 0 0 0 0.2rem var(--accent-bg) !important;
+  color: var(--input-text) !important;
+}
+
+.form-control.bg-dark::placeholder {
+  color: var(--input-placeholder) !important;
+}
+
+/* Modals */
+.modal-content.bg-dark {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-h);
+}
+
+/* Cards */
+.card.bg-dark {
+  background-color: var(--bg-surface) !important;
+  color: var(--text-h);
+}
+
+/* Keep text-white on colored Bootstrap backgrounds (badges, buttons with bg-*) */
+.btn.bg-primary.text-white,
+.btn.bg-secondary.text-white,
+.btn.bg-success.text-white,
+.btn.bg-danger.text-white,
+.btn.bg-warning.text-white,
+.btn.bg-info.text-white,
+.badge.text-white,
+[class*="bg-primary"].text-white,
+[class*="bg-secondary"].text-white,
+[class*="bg-success"].text-white,
+[class*="bg-danger"].text-white,
+[class*="bg-warning"].text-white,
+[class*="bg-info"].text-white {
+  color: #fff !important;
+}
+
+/* Close buttons */
+[data-theme="light"] .btn-close-white {
+  filter: none;
+}
+
+/* Modal header with dark bg in light theme — keep text white */
+.modal-header[style*="--header-bg"] .modal-title {
+  color: #fff !important;
+}
+
+/* Buttons — outline secondary */
+[data-theme="light"] .btn-outline-secondary {
+  color: var(--text);
+  border-color: var(--border);
+}
+
+[data-theme="light"] .btn-outline-secondary:hover {
+  background-color: var(--bg-elevated);
+  color: var(--text-h);
+  border-color: var(--border-light);
+}
+
+/* Navbar brand in light theme */
+[data-theme="light"] .navbar-dark .navbar-brand {
+  color: var(--text-h);
+}
+
+/* Buttons — primary (themed brown accent) */
+[data-theme="light"] .btn-primary {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+
+[data-theme="light"] .btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+}
+
+[data-theme="light"] .btn-primary:disabled {
+  opacity: 0.6;
+}
+
+[data-theme="dark"] .btn-primary {
+  background-color: var(--accent) !important;
+  border-color: var(--accent) !important;
+  color: #fff !important;
+}
+
+[data-theme="dark"] .btn-primary:hover:not(:disabled) {
+  background-color: var(--accent-hover) !important;
+  border-color: var(--accent-hover) !important;
+}
+
+/* Buttons — secondary */
+[data-theme="light"] .btn-secondary {
+  background-color: var(--bg-elevated) !important;
+  border-color: var(--border) !important;
+  color: var(--text-h) !important;
+}
+
+[data-theme="light"] .btn-secondary:hover {
+  background-color: var(--border) !important;
+  color: var(--text-h) !important;
+}
+
+[data-theme="dark"] .btn-secondary {
+  background-color: var(--bg-elevated) !important;
+  border-color: var(--border) !important;
+  color: var(--text-h) !important;
+}
+
+[data-theme="dark"] .btn-secondary:hover {
+  background-color: var(--border) !important;
+  color: var(--text-h) !important;
+}
+
+/* Buttons — outline-light */
+[data-theme="light"] .btn-outline-light {
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="light"] .btn-outline-light:hover {
+  background-color: var(--bg-elevated) !important;
+  color: var(--text-h) !important;
+  border-color: var(--border-light) !important;
+}
+
+[data-theme="dark"] .btn-outline-light {
+  color: var(--text) !important;
+  border-color: var(--border) !important;
+}
+
+[data-theme="dark"] .btn-outline-light:hover {
+  background-color: var(--bg-elevated) !important;
+  color: var(--text-h) !important;
+}
+
+/* Buttons — outline-danger */
+[data-theme="light"] .btn-outline-danger {
+  color: #c0392b;
+  border-color: #c0392b;
+}
+
+[data-theme="light"] .btn-outline-danger:hover {
+  background-color: #c0392b;
+  color: #fff;
+}
+
+/* Buttons — outline-info */
+[data-theme="light"] .btn-outline-info {
+  color: var(--accent);
+  border-color: var(--accent);
+}
+
+[data-theme="light"] .btn-outline-info:hover {
+  background-color: var(--accent);
+  color: #fff;
+}
+
+/* Buttons — outline-success */
+[data-theme="light"] .btn-outline-success {
+  color: #27ae60;
+  border-color: #27ae60;
+}
+
+[data-theme="light"] .btn-outline-success:hover {
+  background-color: #27ae60;
+  color: #fff;
+}
+
+/* Buttons — link */
+[data-theme="light"] .btn-link {
+  color: var(--accent) !important;
+}
+
+[data-theme="light"] .btn-link:hover {
+  color: var(--accent-hover) !important;
+}
