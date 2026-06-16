@@ -79,7 +79,7 @@ export default function ImportHistory() {
         <div className="module-header">
           <h3 className="module-title">Histórico de Importações</h3>
           <p className="module-subtitle">
-            {counts.total} importação{counts.total === 1 ? "" : "ões"} ·
+            {counts.total} {counts.total === 1 ? "importação" : "importações"} ·
             {" "}<span className="text-success">{counts.concluida || 0} concluída(s)</span> ·
             {" "}<span className="text-warning">{counts.aguardando_revisao || 0} aguardando</span> ·
             {" "}<span className="text-danger">{counts.erro || 0} com erro</span>
