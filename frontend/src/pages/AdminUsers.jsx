@@ -233,7 +233,7 @@ export default function AdminUsers() {
                             Pedidos de {u.name}
                           </h6>
                           {loadingOrders ? (
-                            <p className="text-secondary small mb-0">Carregando...</p>
+                            <LoadingSpinner label="Carregando pedidos..." padding="py-3" small />
                           ) : userOrders.length === 0 ? (
                             <p className="text-secondary small mb-0">Nenhum pedido encontrado.</p>
                           ) : (

@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useSearchParams } from "react-router-dom";
 import { globalSearch } from "../services/reportService";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 
 import { statusLabels, statusColors } from "../constants/orderStatus";
@@ -140,6 +141,9 @@ export default function AdminReports() {
         </div>
 
         {searchError && <div className="alert alert-danger py-2 small">{searchError}</div>}
+        {searching && !searchResult && (
+          <LoadingSpinner label="Pesquisando..." />
+        )}
         {searchResult && (
           <div className="d-flex justify-content-between align-items-center mb-2">
             <span className="text-secondary small">

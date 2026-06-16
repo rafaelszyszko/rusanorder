@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import { listSamples } from "../services/sampleService";
 import { listClients } from "../services/clientService";
@@ -46,6 +47,7 @@ export default function SampleList() {
   const [samples, setSamples] = useState([]);
   const [clients, setClients] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
 
   const [filterStatus, setFilterStatus] = useState("");
   const [filterClient, setFilterClient] = useState("");
@@ -60,7 +62,11 @@ export default function SampleList() {
   const [pageSize, setPageSize] = useState(20);
 
   const load = () => {
-    listSamples().then(setSamples).catch((e) => setError(e.message));
+    setLoading(true);
+    listSamples()
+      .then(setSamples)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => { load(); }, []);
@@ -243,10 +249,13 @@ export default function SampleList() {
               </tr>
             </thead>
             <tbody>
-              {paginated.length === 0 && (
+              {loading && (
+                <tr><td colSpan="6"><LoadingSpinner label="Carregando amostras..." /></td></tr>
+              )}
+              {!loading && paginated.length === 0 && (
                 <tr><td colSpan="6" className="text-center text-secondary py-4">Nenhuma amostra encontrada</td></tr>
               )}
-              {paginated.map((s) => {
+              {!loading && paginated.map((s) => {
                 const days = Number(s.days_since_sent || 0);
                 const isOpen = ["enviada", "recebida_pelo_cliente", "em_analise"].includes(s.status);
                 const dayClass = isOpen && days > 15 ? "text-danger" : isOpen && days > 7 ? "text-warning" : "text-light";

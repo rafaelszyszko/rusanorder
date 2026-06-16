@@ -6,6 +6,7 @@ import { getPhotoBlobUrl } from "../services/sampleService";
 import DashboardLayout from "../components/DashboardLayout";
 import ConfirmModal from "../components/ConfirmModal";
 import OrderFlowchart from "../components/OrderFlowchart";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 
 import { statusLabels, statusColors, validTransitions } from "../constants/orderStatus";
@@ -157,7 +158,7 @@ export default function AdminOrderDetail() {
     });
   };
 
-  if (!order && !error) return <DashboardLayout><div className="text-center text-secondary py-5">Carregando...</div></DashboardLayout>;
+  if (!order && !error) return <DashboardLayout><LoadingSpinner label="Carregando pedido..." /></DashboardLayout>;
 
   const transitions = order ? (validTransitions[order.status] || []) : [];
   const orderId = order ? formatOrderId(order.client_code, order.id) : "";

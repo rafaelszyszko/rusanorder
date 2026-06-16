@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import {
   getSampleById,
@@ -163,7 +164,7 @@ export default function SampleDetail() {
   };
 
   if (!sample && !error) {
-    return <DashboardLayout><div className="text-center text-secondary py-5">Carregando...</div></DashboardLayout>;
+    return <DashboardLayout><LoadingSpinner label="Carregando amostra..." /></DashboardLayout>;
   }
 
   if (!sample) {

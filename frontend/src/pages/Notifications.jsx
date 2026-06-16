@@ -1,6 +1,7 @@
 import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import {
   listNotifications,
@@ -161,7 +162,7 @@ export default function Notifications() {
         </div>
 
         {/* Lista agrupada */}
-        {loading && <p className="text-center text-secondary py-4">Carregando...</p>}
+        {loading && <LoadingSpinner label="Carregando notificações..." />}
         {!loading && items.length === 0 && (
           <p className="text-center text-secondary py-4">Você não tem notificações com esses filtros.</p>
         )}

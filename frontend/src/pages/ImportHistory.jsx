@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import { listImports, reprocessImport } from "../services/importService";
 import { formatOrderId } from "../utils/formatOrderId";
@@ -150,7 +151,7 @@ export default function ImportHistory() {
             </thead>
             <tbody>
               {loading && (
-                <tr><td colSpan={7} className="text-center text-secondary py-4">Carregando…</td></tr>
+                <tr><td colSpan={7}><LoadingSpinner label="Carregando importações..." /></td></tr>
               )}
               {!loading && items.length === 0 && (
                 <tr>

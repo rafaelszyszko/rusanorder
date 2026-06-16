@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import { getImport, getPdfBlobUrl, confirmImport, skipImport } from "../services/importService";
 import { listClients } from "../services/clientService";
@@ -153,10 +154,7 @@ export default function ImportReview() {
   if (loading) {
     return (
       <DashboardLayout>
-        <div className="container-fluid px-4 py-4 text-center flex-grow-1">
-          <div className="spinner-border" role="status"></div>
-          <div className="mt-3 text-secondary">Carregando importação…</div>
-        </div>
+        <LoadingSpinner label="Carregando importação..." />
       </DashboardLayout>
     );
   }

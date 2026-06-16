@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
 import { getAdminDashboardStats } from "../services/reportService";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { statusLabels, statusColors } from "../constants/orderStatus";
 import { formatOrderId } from "../utils/formatOrderId";
 
@@ -167,7 +168,7 @@ export default function AdminDashboard() {
     },
   };
 
-  if (!stats && !error) return <DashboardLayout><div className="text-center text-secondary py-5">Carregando...</div></DashboardLayout>;
+  if (!stats && !error) return <DashboardLayout><LoadingSpinner label="Carregando dashboard..." /></DashboardLayout>;
 
   return (
     <DashboardLayout>
