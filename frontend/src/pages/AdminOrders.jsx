@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { listOrders, deleteOrder, updateOrderStatus } from "../services/orderService";
 import DashboardLayout from "../components/DashboardLayout";
 import ConfirmModal from "../components/ConfirmModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import { statusLabels, statusColors, allStatuses, validTransitions } from "../constants/orderStatus";
 import { formatOrderId } from "../utils/formatOrderId";
@@ -37,6 +38,7 @@ function SortHeader({ column, sortKey, sortDir, onSort, className = "" }) {
 
 export default function AdminOrders() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [filterStatus, setFilterStatus] = useState("");
   const [filterClient, setFilterClient] = useState("");
   const [filterSearch, setFilterSearch] = useState("");
@@ -58,7 +60,13 @@ export default function AdminOrders() {
   const [batchResults, setBatchResults] = useState(null); // { success: [], errors: [] }
   const [confirmModal, setConfirmModal] = useState({ show: false, title: "", message: "", variant: "danger", confirmLabel: "Confirmar", onConfirm: null });
 
-  const load = () => { listOrders().then(setOrders).catch((e) => setError(e.message)); };
+  const load = () => {
+    setLoading(true);
+    listOrders()
+      .then(setOrders)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
+  };
   useEffect(() => { load(); }, []);
 
   const handleDelete = (id) => {
@@ -500,7 +508,12 @@ export default function AdminOrders() {
               </tr>
             </thead>
             <tbody>
-              {paginatedOrders.length === 0 && <tr><td colSpan={isAdmin ? 7 : 6} className="text-center text-secondary py-4">Nenhum pedido</td></tr>}
+              {loading && (
+                <tr><td colSpan={isAdmin ? 7 : 6}><LoadingSpinner label="Carregando pedidos..." /></td></tr>
+              )}
+              {!loading && paginatedOrders.length === 0 && (
+                <tr><td colSpan={isAdmin ? 7 : 6} className="text-center text-secondary py-4">Nenhum pedido</td></tr>
+              )}
               {paginatedOrders.map((o) => {
                 const allowed = validTransitions[o.status] || [];
                 const dt = new Date(o.created_at);

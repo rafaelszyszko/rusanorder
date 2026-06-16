@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { listUsers, listDeletedUsers, deleteUser, restoreUser, getUserOrders } from "../services/adminService";
 import DashboardLayout from "../components/DashboardLayout";
 import ConfirmModal from "../components/ConfirmModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { statusLabels, statusColors } from "../constants/orderStatus";
 import { formatOrderId } from "../utils/formatOrderId";
 
@@ -11,6 +12,7 @@ export default function AdminUsers() {
   const [inactiveUsers, setInactiveUsers] = useState([]);
   const [showInactive, setShowInactive] = useState(false);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [expandedUser, setExpandedUser] = useState(null);
   const [userOrders, setUserOrders] = useState([]);
   const [loadingOrders, setLoadingOrders] = useState(false);
@@ -18,7 +20,11 @@ export default function AdminUsers() {
   const navigate = useNavigate();
 
   const loadUsers = () => {
-    listUsers().then(setUsers).catch((err) => setError(err.message));
+    setLoading(true);
+    listUsers()
+      .then(setUsers)
+      .catch((err) => setError(err.message))
+      .finally(() => setLoading(false));
   };
 
   const loadInactive = () => {
@@ -139,14 +145,21 @@ export default function AdminUsers() {
               </tr>
             </thead>
             <tbody>
-              {displayList.length === 0 && (
+              {loading && !showInactive && (
+                <tr>
+                  <td colSpan={7}>
+                    <LoadingSpinner label="Carregando usuários..." />
+                  </td>
+                </tr>
+              )}
+              {(!loading || showInactive) && displayList.length === 0 && (
                 <tr>
                   <td colSpan={showInactive ? 8 : 7} className="text-center text-secondary py-4">
                     {showInactive ? "Nenhum usuário inativo" : "Nenhum usuário encontrado"}
                   </td>
                 </tr>
               )}
-              {displayList.map((u) => (
+              {(!loading || showInactive) && displayList.map((u) => (
                 <>
                   <tr key={u.id} style={showInactive ? { opacity: 0.7 } : {}}>
                     <td>{u.id}</td>

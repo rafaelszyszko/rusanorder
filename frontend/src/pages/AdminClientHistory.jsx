@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { getClientById, getClientHistory } from "../services/clientService";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 
 import { statusLabels, statusColors } from "../constants/orderStatus";
@@ -13,11 +14,17 @@ export default function AdminClientHistory() {
   const basePath = useBasePath();
   const [client, setClient] = useState(null);
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
   useEffect(() => {
-    getClientById(id).then(setClient).catch((e) => setError(e.message));
-    getClientHistory(id).then(setOrders).catch((e) => setError(e.message));
+    setLoading(true);
+    Promise.all([
+      getClientById(id).then(setClient),
+      getClientHistory(id).then(setOrders),
+    ])
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   }, [id]);
 
   const totalSpent = orders.filter((o) => o.status !== "cancelado").reduce((s, o) => s + parseFloat(o.total), 0);
@@ -65,10 +72,13 @@ export default function AdminClientHistory() {
               </tr>
             </thead>
             <tbody>
-              {orders.length === 0 && (
+              {loading && (
+                <tr><td colSpan="6"><LoadingSpinner label="Carregando histórico..." /></td></tr>
+              )}
+              {!loading && orders.length === 0 && (
                 <tr><td colSpan="6" className="text-center text-secondary py-4">Nenhum pedido encontrado</td></tr>
               )}
-              {orders.map((o) => (
+              {!loading && orders.map((o) => (
                 <tr key={o.id}>
                   <td>{formatOrderId(o.client_code, o.id)}</td>
                   <td><span className={`badge bg-${statusColors[o.status]}`}>{statusLabels[o.status]}</span></td>

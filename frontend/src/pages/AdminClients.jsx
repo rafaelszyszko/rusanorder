@@ -3,19 +3,25 @@ import { useNavigate } from "react-router-dom";
 import { listClients, deleteClient } from "../services/clientService";
 import DashboardLayout from "../components/DashboardLayout";
 import ConfirmModal from "../components/ConfirmModal";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 
 export default function AdminClients() {
   const [clients, setClients] = useState([]);
   const [search, setSearch] = useState("");
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [confirmModal, setConfirmModal] = useState({ show: false, title: "", message: "", onConfirm: null });
   const navigate = useNavigate();
   const basePath = useBasePath();
   const isAdmin = localStorage.getItem("role") === "admin";
 
   const loadClients = () => {
-    listClients().then(setClients).catch((e) => setError(e.message));
+    setLoading(true);
+    listClients()
+      .then(setClients)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => { loadClients(); }, []);
@@ -81,10 +87,13 @@ export default function AdminClients() {
               </tr>
             </thead>
             <tbody>
-              {filtered.length === 0 && (
+              {loading && (
+                <tr><td colSpan="7"><LoadingSpinner label="Carregando clientes..." /></td></tr>
+              )}
+              {!loading && filtered.length === 0 && (
                 <tr><td colSpan="7" className="text-center text-secondary py-4">Nenhum cliente encontrado</td></tr>
               )}
-              {filtered.map((c) => (
+              {!loading && filtered.map((c) => (
                 <tr key={c.id}>
                   <td>{c.name}</td>
                   <td><span className="badge bg-secondary">{c.code || "—"}</span></td>

@@ -3,6 +3,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useTheme } from "../contexts/ThemeContext";
 import NotificationBell from "./NotificationBell";
 import SearchTool from "./SearchTool";
+import ApiStatus from "./ApiStatus";
 import "./DashboardLayout.css";
 
 const ADMIN_NAV = [
@@ -157,8 +158,11 @@ export default function DashboardLayout({ children }) {
       </div>
 
       <footer className="app-footer">
-        <div className="container-fluid px-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-1">
-          <span>RusanOrder v1.0 &mdash; Sistema de Gerenciamento de Pedidos</span>
+        <div className="container-fluid px-4 d-flex flex-column flex-sm-row justify-content-between align-items-center gap-2">
+          <div className="d-flex align-items-center gap-3">
+            <span>RusanOrder v1.0 &mdash; Sistema de Gerenciamento de Pedidos</span>
+            <ApiStatus />
+          </div>
           <span>Curtume Rusan &copy; {new Date().getFullYear()}</span>
         </div>
       </footer>

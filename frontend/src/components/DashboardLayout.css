@@ -345,3 +345,20 @@
   gap: 4px;
   flex-wrap: wrap;
 }
+
+/* ── API status (admin-only, no footer) ── */
+.api-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.72rem;
+  color: var(--text);
+}
+
+.api-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.05);
+}

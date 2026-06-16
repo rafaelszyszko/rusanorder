@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { listDeletedOrders, restoreOrder, permanentDeleteOrder } from "../services/orderService";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 import { statusLabels, statusColors } from "../constants/orderStatus";
 import { formatOrderId } from "../utils/formatOrderId";
@@ -9,13 +10,18 @@ import { formatOrderId } from "../utils/formatOrderId";
 export default function OrderTrash() {
   const [orders, setOrders] = useState([]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(true);
   const [deleteTarget, setDeleteTarget] = useState(null);
   const [deleting, setDeleting] = useState(false);
   const navigate = useNavigate();
   const basePath = useBasePath();
 
   const load = () => {
-    listDeletedOrders().then(setOrders).catch((e) => setError(e.message));
+    setLoading(true);
+    listDeletedOrders()
+      .then(setOrders)
+      .catch((e) => setError(e.message))
+      .finally(() => setLoading(false));
   };
 
   useEffect(() => { load(); }, []);
@@ -74,10 +80,13 @@ export default function OrderTrash() {
               </tr>
             </thead>
             <tbody>
-              {orders.length === 0 && (
+              {loading && (
+                <tr><td colSpan="7"><LoadingSpinner label="Carregando lixeira..." /></td></tr>
+              )}
+              {!loading && orders.length === 0 && (
                 <tr><td colSpan="7" className="text-center text-secondary py-4">Lixeira vazia</td></tr>
               )}
-              {orders.map((o) => (
+              {!loading && orders.map((o) => (
                 <tr key={o.id}>
                   <td>{formatOrderId(o.client_code, o.id)}</td>
                   <td>{o.client_name}</td>
