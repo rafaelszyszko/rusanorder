@@ -11,6 +11,14 @@ import notificationRoutes from './routes/notificationRoutes.js';
 
 const app = express();
 
+// API não deve cachear: respostas de pedidos/amostras mudam o tempo todo.
+// Desabilita ETag (que gera 304s) e força no-store nas respostas.
+app.disable('etag');
+app.use((_req, res, next) => {
+  res.set('Cache-Control', 'no-store');
+  next();
+});
+
 // CORS: aceita CSV de origens em CORS_ORIGIN, ou libera tudo em dev se vazio.
 const corsOrigin = process.env.CORS_ORIGIN
   ? process.env.CORS_ORIGIN.split(',').map((o) => o.trim()).filter(Boolean)

@@ -5,10 +5,10 @@ import DashboardLayout from "../components/DashboardLayout";
 import { statusLabels, statusColors } from "../constants/orderStatus";
 import { formatOrderId } from "../utils/formatOrderId";
 
-import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler } from "chart.js";
+import { Chart as ChartJS, ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler, BarController, LineController, DoughnutController } from "chart.js";
 import { Doughnut, Bar, Line } from "react-chartjs-2";
 
-ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler);
+ChartJS.register(ArcElement, Tooltip, Legend, CategoryScale, LinearScale, BarElement, PointElement, LineElement, Filler, BarController, LineController, DoughnutController);
 
 const bootstrapColor = {
   secondary: "#6c757d", info: "#0dcaf0", warning: "#ffc107", danger: "#dc3545",
