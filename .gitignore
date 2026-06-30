@@ -85,6 +85,14 @@ coverage/
 .eslintcache
 
 # ────────────────────────────────────────────────
+# Cypress
+# ────────────────────────────────────────────────
+cypress/videos/
+cypress/screenshots/
+cypress/downloads/
+cypress.env.json
+
+# ────────────────────────────────────────────────
 # Misc
 # ────────────────────────────────────────────────
 extras/test-pdfs/

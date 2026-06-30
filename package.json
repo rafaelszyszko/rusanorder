@@ -1,5 +1,17 @@
 {
+  "name": "rusanorder-e2e",
+  "private": true,
+  "description": "Testes E2E (Cypress) para o RusanOrder",
+  "scripts": {
+    "cy:open": "cypress open",
+    "cy:run": "cypress run",
+    "cy:run:local": "CYPRESS_BASE_URL=http://localhost:5173 CYPRESS_API_URL=http://localhost:3000 cypress run",
+    "cy:open:local": "CYPRESS_BASE_URL=http://localhost:5173 CYPRESS_API_URL=http://localhost:3000 cypress open"
+  },
   "dependencies": {
     "bcrypt": "^6.0.0"
+  },
+  "devDependencies": {
+    "cypress": "^14.5.0"
   }
 }
