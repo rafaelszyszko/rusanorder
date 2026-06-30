@@ -29,7 +29,7 @@ describe('TC-E3-04 / TC-E3-14 — Amostra → Pedido', () => {
     api(`/samples/${sampleId}/confirm-acceptance`, {
       method: 'POST',
       body: {
-        acceptance_date: new Date().toISOString().slice(0, 10),
+        acceptance_at: new Date().toISOString().slice(0, 10),
         acceptance_notes: 'Aceite via E2E',
       },
     });

@@ -57,11 +57,18 @@ describe('TC-E1-01 / TC-E1-02 — Autenticação', () => {
         url: `${Cypress.env('apiUrl')}/users`,
         headers: { Authorization: `Bearer ${token}` },
         body: { name: 'Usuário a desativar', email, password, role: 'user' },
+      });
+      // createUser não devolve id; buscamos pelo email na listagem
+      cy.request({
+        url: `${Cypress.env('apiUrl')}/users`,
+        headers: { Authorization: `Bearer ${token}` },
       }).then(({ body }) => {
-        const userId = body.id || body.userId || body.insertId;
+        const list = Array.isArray(body) ? body : body?.rows || body?.data || [];
+        const created = list.find((u) => u.email === email);
+        expect(created, 'usuário criado encontrado').to.exist;
         cy.request({
           method: 'DELETE',
-          url: `${Cypress.env('apiUrl')}/users/${userId}`,
+          url: `${Cypress.env('apiUrl')}/users/${created.id}`,
           headers: { Authorization: `Bearer ${token}` },
         });
         cy.request({
