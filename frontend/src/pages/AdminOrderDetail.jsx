@@ -255,6 +255,19 @@ export default function AdminOrderDetail() {
                   )}
                 </div>
 
+                {/* Editar pedido — bloqueado em status terminais */}
+                {!["entregue", "entregue_divergencia", "cancelado"].includes(order.status) && (
+                  <button
+                    className="btn btn-outline-light d-flex align-items-center gap-2"
+                    style={{ padding: "10px 16px" }}
+                    onClick={() => navigate(`${basePath}/orders/${id}/edit`)}
+                    title="Editar dados do pedido"
+                  >
+                    <i className="bi bi-pencil-square"></i>
+                    Editar
+                  </button>
+                )}
+
                 {/* Flowchart toggle button */}
                 <button
                   className="btn btn-outline-secondary d-flex align-items-center gap-1"

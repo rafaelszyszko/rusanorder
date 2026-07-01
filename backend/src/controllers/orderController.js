@@ -161,6 +161,72 @@ export const createOrder = async (req, res) => {
   }
 };
 
+// Atualiza dados do pedido (OC, observações, itens).
+// Mantém cliente/amostra/status. Bloqueia em status terminais.
+export const updateOrder = async (req, res) => {
+  const orderId = Number(req.params.id);
+  const { purchase_order, notes, items } = req.body;
+
+  try {
+    const orderRows = await dbQueryP(
+      'SELECT id, status, client_id FROM orders WHERE id = ? AND deleted_at IS NULL',
+      [orderId]
+    );
+    if (orderRows.length === 0) return res.status(404).json({ message: 'Pedido não encontrado' });
+
+    const current = orderRows[0];
+    const lockedStatuses = ['entregue', 'entregue_divergencia', 'cancelado'];
+    if (lockedStatuses.includes(current.status)) {
+      return res.status(400).json({
+        message: `Pedido em status "${current.status}" não pode ser editado. Reabra o pedido se precisar ajustar.`,
+      });
+    }
+
+    if (!Array.isArray(items) || items.length === 0) {
+      return res.status(400).json({ message: 'Adicione pelo menos um item' });
+    }
+    for (const it of items) {
+      if (!it.description || !String(it.description).trim()) {
+        return res.status(400).json({ message: 'Cada item precisa ter descrição' });
+      }
+      if (!(Number(it.quantity) > 0)) {
+        return res.status(400).json({ message: `Quantidade inválida no item "${it.description}"` });
+      }
+      if (!(Number(it.unit_price) >= 0)) {
+        return res.status(400).json({ message: `Preço inválido no item "${it.description}"` });
+      }
+    }
+
+    const total = items.reduce((s, i) => s + Number(i.quantity) * Number(i.unit_price), 0);
+
+    await dbQueryP(
+      'UPDATE orders SET purchase_order = ?, notes = ?, total = ? WHERE id = ?',
+      [purchase_order ? String(purchase_order).trim() : null, notes ?? null, total, orderId]
+    );
+
+    // Substitui itens (delete + insert)
+    await dbQueryP('DELETE FROM order_items WHERE order_id = ?', [orderId]);
+    const values = items.map((i) => [
+      orderId,
+      String(i.description).trim(),
+      i.unit || 'm²',
+      Number(i.quantity),
+      Number(i.unit_price),
+      Number(i.quantity) * Number(i.unit_price),
+    ]);
+    await dbQueryP(
+      'INSERT INTO order_items (order_id, description, unit, quantity, unit_price, subtotal) VALUES ?',
+      [values]
+    );
+
+    createComment(orderId, req.user.id, 'status_change', 'Dados do pedido editados', null, null);
+
+    res.json({ message: 'Pedido atualizado com sucesso' });
+  } catch (err) {
+    res.status(500).json({ message: 'Erro ao atualizar pedido', error: err.message });
+  }
+};
+
 export const updateOrderStatus = (req, res) => {
   const { status, comment } = req.body;
 

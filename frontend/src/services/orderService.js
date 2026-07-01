@@ -27,6 +27,13 @@ export const createOrder = async (order) => {
   return data;
 };
 
+export const updateOrder = async (id, order) => {
+  const res = await fetch(`${API}/${id}`, { method: "PUT", headers: authHeaders(), body: JSON.stringify(order) });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.message || "Erro ao atualizar pedido");
+  return data;
+};
+
 export const updateOrderStatus = async (id, status, comment = "") => {
   const res = await fetch(`${API}/${id}/status`, { method: "PATCH", headers: authHeaders(), body: JSON.stringify({ status, comment }) });
   const data = await res.json();

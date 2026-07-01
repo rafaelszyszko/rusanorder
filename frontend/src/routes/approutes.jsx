@@ -64,6 +64,7 @@ export default function AppRoutes() {
         <Route path="/admin/orders" element={<PrivateRoute role="admin"><AdminOrders /></PrivateRoute>} />
         <Route path="/admin/orders/new" element={<PrivateRoute role="admin"><AdminOrderForm /></PrivateRoute>} />
         <Route path="/admin/orders/trash" element={<PrivateRoute role="admin"><OrderTrash /></PrivateRoute>} />
+        <Route path="/admin/orders/:id/edit" element={<PrivateRoute role="admin"><AdminOrderForm /></PrivateRoute>} />
         <Route path="/admin/orders/:id" element={<PrivateRoute role="admin"><AdminOrderDetail /></PrivateRoute>} />
         <Route path="/admin/search" element={<PrivateRoute role="admin"><GlobalSearch /></PrivateRoute>} />
         <Route path="/admin/imports" element={<PrivateRoute role="admin"><ImportHistory /></PrivateRoute>} />
@@ -84,6 +85,7 @@ export default function AppRoutes() {
         <Route path="/user/orders" element={<PrivateRoute role="user"><AdminOrders /></PrivateRoute>} />
         <Route path="/user/orders/new" element={<PrivateRoute role="user"><AdminOrderForm /></PrivateRoute>} />
         <Route path="/user/orders/trash" element={<PrivateRoute role="user"><OrderTrash /></PrivateRoute>} />
+        <Route path="/user/orders/:id/edit" element={<PrivateRoute role="user"><AdminOrderForm /></PrivateRoute>} />
         <Route path="/user/orders/:id" element={<PrivateRoute role="user"><AdminOrderDetail /></PrivateRoute>} />
         <Route path="/user/search" element={<PrivateRoute role="user"><GlobalSearch /></PrivateRoute>} />
         <Route path="/user/users/new" element={<PrivateRoute role="user"><AdminUserForm /></PrivateRoute>} />

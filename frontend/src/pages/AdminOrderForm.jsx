@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useSearchParams } from "react-router-dom";
-import { createOrder } from "../services/orderService";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
+import { createOrder, updateOrder, getOrderById } from "../services/orderService";
 import { listClients, createClient } from "../services/clientService";
 import { getSamplePrefill } from "../services/sampleService";
 import DashboardLayout from "../components/DashboardLayout";
+import LoadingSpinner from "../components/LoadingSpinner";
 import { useBasePath } from "../hooks/useBasePath";
 
 const UNIT_OPTIONS = ["m²", "un", "kg", "m", "pc"];
@@ -131,6 +132,8 @@ function NewClientModal({ onClose, onCreated }) {
 export default function AdminOrderForm() {
   const navigate = useNavigate();
   const basePath = useBasePath();
+  const { id } = useParams();
+  const isEdit = Boolean(id);
   const [searchParams] = useSearchParams();
   const fromSampleId = searchParams.get("from_sample");
 
@@ -143,6 +146,8 @@ export default function AdminOrderForm() {
   const [loading, setLoading] = useState(false);
   const [showNewClient, setShowNewClient] = useState(false);
   const [sampleInfo, setSampleInfo] = useState(null);
+  const [loadingOrder, setLoadingOrder] = useState(isEdit);
+  const [editingOrderStatus, setEditingOrderStatus] = useState(null);
 
   const loadClients = () => {
     listClients().then(setClients).catch(() => {});
@@ -152,9 +157,32 @@ export default function AdminOrderForm() {
     loadClients();
   }, []);
 
+  // Modo edição: carregar pedido existente
+  useEffect(() => {
+    if (!isEdit) return;
+    setLoadingOrder(true);
+    getOrderById(id)
+      .then((o) => {
+        setClientId(String(o.client_id));
+        setPurchaseOrder(o.purchase_order || "");
+        setNotes(o.notes || "");
+        setItems(
+          (o.items || []).map((it) => ({
+            description: it.description,
+            unit: it.unit || "m²",
+            quantity: Number(it.quantity),
+            unit_price: Number(it.unit_price),
+          }))
+        );
+        setEditingOrderStatus(o.status);
+      })
+      .catch((e) => setError(e.message))
+      .finally(() => setLoadingOrder(false));
+  }, [id, isEdit]);
+
   // Pré-preenchimento via amostra (RF9.12)
   useEffect(() => {
-    if (!fromSampleId) return;
+    if (isEdit || !fromSampleId) return;
     getSamplePrefill(fromSampleId)
       .then((data) => {
         setSampleInfo(data);
@@ -165,7 +193,7 @@ export default function AdminOrderForm() {
         ]);
       })
       .catch((e) => setError(e.message));
-  }, [fromSampleId]);
+  }, [fromSampleId, isEdit]);
 
   const handleClientCreated = (newClientId, newClientName) => {
     setShowNewClient(false);
@@ -195,7 +223,6 @@ export default function AdminOrderForm() {
     setLoading(true);
     try {
       const payload = {
-        client_id: Number(clientId),
         purchase_order: purchaseOrder.trim() || null,
         notes,
         items: validItems.map((i) => ({
@@ -205,13 +232,19 @@ export default function AdminOrderForm() {
           unit_price: Number(i.unit_price),
         })),
       };
-      if (sampleInfo?.sample_id) payload.sample_id = sampleInfo.sample_id;
 
-      const created = await createOrder(payload);
-      if (sampleInfo?.sample_id && created.id) {
-        navigate(`${basePath}/orders/${created.id}`);
+      if (isEdit) {
+        await updateOrder(id, payload);
+        navigate(`${basePath}/orders/${id}`);
       } else {
-        navigate(`${basePath}/orders`);
+        payload.client_id = Number(clientId);
+        if (sampleInfo?.sample_id) payload.sample_id = sampleInfo.sample_id;
+        const created = await createOrder(payload);
+        if (sampleInfo?.sample_id && created.id) {
+          navigate(`${basePath}/orders/${created.id}`);
+        } else {
+          navigate(`${basePath}/orders`);
+        }
       }
     } catch (e) {
       setError(e.message);
@@ -224,10 +257,16 @@ export default function AdminOrderForm() {
     <DashboardLayout>
       <div className="container-fluid px-4 py-4 flex-grow-1 page-form-centered">
                 <div className="module-header">
-                  <h3 className="module-title">Novo Pedido</h3>
-                  <p className="module-subtitle">Cadastro de novo pedido</p>
+                  <h3 className="module-title">{isEdit ? "Editar pedido" : "Novo Pedido"}</h3>
+                  <p className="module-subtitle">{isEdit ? "Edição dos dados do pedido" : "Cadastro de novo pedido"}</p>
                 </div>
-                {sampleInfo && (
+                {isEdit && editingOrderStatus && !["novo", "ajuste_necessario"].includes(editingOrderStatus) && (
+                  <div className="alert alert-warning py-2 small mb-3">
+                    <i className="bi bi-exclamation-triangle me-2"></i>
+                    Este pedido já está em <strong>{editingOrderStatus.replace(/_/g, " ")}</strong>. Edite com cautela — alterações em itens podem divergir do que foi enviado ou produzido.
+                  </div>
+                )}
+                {sampleInfo && !isEdit && (
                   <div className="alert alert-info py-2 small mb-3">
                     <i className="bi bi-box-seam me-2"></i>
                     Gerando pedido a partir da amostra. Cliente e primeiro item já foram pré-preenchidos.
@@ -235,24 +274,34 @@ export default function AdminOrderForm() {
                   </div>
                 )}
                 {error && <div className="alert alert-danger py-2 small">{error}</div>}
+                {isEdit && loadingOrder && <LoadingSpinner label="Carregando pedido..." />}
 
                 <form onSubmit={handleSubmit} style={{ maxWidth: 700 }}>
                   <div className="row mb-3">
                     <div className="col-md-7">
                       <label className="form-label text-light small">Cliente *</label>
                       <div className="d-flex gap-2">
-                        <select className="form-select bg-dark text-light border-secondary" value={clientId} onChange={(e) => setClientId(e.target.value)} required>
+                        <select
+                          className="form-select bg-dark text-light border-secondary"
+                          value={clientId}
+                          onChange={(e) => setClientId(e.target.value)}
+                          required
+                          disabled={isEdit}
+                          title={isEdit ? "Cliente não pode ser alterado na edição" : ""}
+                        >
                           <option value="">Selecione...</option>
                           {clients.map((c) => <option key={c.id} value={c.id}>{c.name}</option>)}
                         </select>
-                        <button
-                          type="button"
-                          className="btn btn-outline-secondary text-nowrap"
-                          onClick={() => setShowNewClient(true)}
-                          title="Cadastrar novo cliente"
-                        >
-                          + Novo
-                        </button>
+                        {!isEdit && (
+                          <button
+                            type="button"
+                            className="btn btn-outline-secondary text-nowrap"
+                            onClick={() => setShowNewClient(true)}
+                            title="Cadastrar novo cliente"
+                          >
+                            + Novo
+                          </button>
+                        )}
                       </div>
                     </div>
                     <div className="col-md-5 mt-3 mt-md-0">
@@ -314,8 +363,16 @@ export default function AdminOrderForm() {
                   </div>
 
                   <div className="d-flex gap-2">
-                    <button type="submit" className="btn btn-primary" disabled={loading}>{loading ? "Criando..." : "Criar pedido"}</button>
-                    <button type="button" className="btn btn-outline-secondary" onClick={() => navigate(`${basePath}/orders`)}>Cancelar</button>
+                    <button type="submit" className="btn btn-primary" disabled={loading || loadingOrder}>
+                      {loading ? (isEdit ? "Salvando..." : "Criando...") : (isEdit ? "Salvar alterações" : "Criar pedido")}
+                    </button>
+                    <button
+                      type="button"
+                      className="btn btn-outline-secondary"
+                      onClick={() => navigate(isEdit ? `${basePath}/orders/${id}` : `${basePath}/orders`)}
+                    >
+                      Cancelar
+                    </button>
                   </div>
                 </form>
       </div>
