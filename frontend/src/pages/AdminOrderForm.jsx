@@ -316,8 +316,17 @@ export default function AdminOrderForm() {
                   </div>
 
                   <label className="form-label text-light small">Itens *</label>
+                  {/* Cabeçalho explicativo das colunas (md+) */}
+                  <div className="row g-2 mb-1 d-none d-md-flex text-secondary" style={{ fontSize: "0.7rem" }}>
+                    <div className="col-md-4">Descrição</div>
+                    <div className="col-md-2">Unidade</div>
+                    <div className="col-md-2">Quantidade</div>
+                    <div className="col-md-2">Preço unit.</div>
+                    <div className="col-md-1 text-end">Subtotal</div>
+                    <div className="col-md-1"></div>
+                  </div>
                   {items.map((item, i) => (
-                    <div key={i} className="row g-2 mb-2 align-items-end">
+                    <div key={i} className="row g-2 mb-2 align-items-center">
                       <div className="col-12 col-md-4">
                         <input
                           type="text"
@@ -327,7 +336,7 @@ export default function AdminOrderForm() {
                           onChange={(e) => handleItemChange(i, "description", e.target.value)}
                         />
                       </div>
-                      <div className="col-3 col-md-1">
+                      <div className="col-4 col-md-2">
                         <select
                           className="form-select form-select-sm bg-dark text-light border-secondary"
                           value={item.unit}
@@ -336,18 +345,18 @@ export default function AdminOrderForm() {
                           {UNIT_OPTIONS.map((u) => <option key={u} value={u}>{u}</option>)}
                         </select>
                       </div>
-                      <div className="col-3 col-md-2">
+                      <div className="col-4 col-md-2">
                         <input type="number" min="0.01" step="0.01" className="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Qtd" value={item.quantity} onChange={(e) => handleItemChange(i, "quantity", Number(e.target.value))} />
                       </div>
-                      <div className="col-3 col-md-2">
+                      <div className="col-4 col-md-2">
                         <input type="number" min="0" step="0.01" className="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Preço" value={item.unit_price} onChange={(e) => handleItemChange(i, "unit_price", Number(e.target.value))} />
                       </div>
-                      <div className="col-2 col-md-1 text-end">
+                      <div className="col-10 col-md-1 text-end">
                         <span className="text-secondary small">R$ {(item.quantity * item.unit_price).toFixed(2)}</span>
                       </div>
-                      <div className="col-1 col-md-2">
+                      <div className="col-2 col-md-1">
                         {items.length > 1 && (
-                          <button type="button" className="btn btn-outline-danger btn-sm w-100" onClick={() => removeItem(i)}>X</button>
+                          <button type="button" className="btn btn-outline-danger btn-sm w-100" onClick={() => removeItem(i)} title="Remover item">×</button>
                         )}
                       </div>
                     </div>
