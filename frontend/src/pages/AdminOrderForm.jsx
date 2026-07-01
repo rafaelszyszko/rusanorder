@@ -318,16 +318,16 @@ export default function AdminOrderForm() {
                   <label className="form-label text-light small">Itens *</label>
                   {/* Cabeçalho explicativo das colunas (md+) */}
                   <div className="row g-2 mb-1 d-none d-md-flex text-secondary" style={{ fontSize: "0.7rem" }}>
-                    <div className="col-md-4">Descrição</div>
+                    <div className="col-md-3">Descrição</div>
                     <div className="col-md-2">Unidade</div>
                     <div className="col-md-2">Quantidade</div>
                     <div className="col-md-2">Preço unit.</div>
-                    <div className="col-md-1 text-end">Subtotal</div>
+                    <div className="col-md-2 text-end">Subtotal</div>
                     <div className="col-md-1"></div>
                   </div>
                   {items.map((item, i) => (
                     <div key={i} className="row g-2 mb-2 align-items-center">
-                      <div className="col-12 col-md-4">
+                      <div className="col-12 col-md-3">
                         <input
                           type="text"
                           className="form-control form-control-sm bg-dark text-light border-secondary"
@@ -351,8 +351,8 @@ export default function AdminOrderForm() {
                       <div className="col-4 col-md-2">
                         <input type="number" min="0" step="0.01" className="form-control form-control-sm bg-dark text-light border-secondary" placeholder="Preço" value={item.unit_price} onChange={(e) => handleItemChange(i, "unit_price", Number(e.target.value))} />
                       </div>
-                      <div className="col-10 col-md-1 text-end">
-                        <span className="text-secondary small">R$ {(item.quantity * item.unit_price).toFixed(2)}</span>
+                      <div className="col-10 col-md-2 text-end">
+                        <span className="text-secondary small" style={{ whiteSpace: "nowrap" }}>R$ {(item.quantity * item.unit_price).toFixed(2)}</span>
                       </div>
                       <div className="col-2 col-md-1">
                         {items.length > 1 && (
