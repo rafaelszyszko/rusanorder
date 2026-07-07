@@ -73,6 +73,11 @@ jobs:
         # os seeds e quebram com ERROR 1062 (duplicate entry).
         run: mysql -h 127.0.0.1 -P 3306 -uroot -proot rusanorder < database/init.sql
 
+      - name: Preparar cypress.env.json
+        # cypress.env.json é gitignored (credenciais). Em CI usamos o .example,
+        # que traz os mesmos usuários semeados pelo init.sql.
+        run: cp cypress.env.example.json cypress.env.json
+
       - name: Instalar dependências (root, backend, frontend)
         run: |
           npm ci
