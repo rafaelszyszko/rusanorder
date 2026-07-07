@@ -86,13 +86,13 @@ jobs:
         run: |
           npm --prefix backend start > backend.log 2>&1 &
           echo $! > backend.pid
-          npx --yes wait-on -t 60000 http://127.0.0.1:3000/health
+          npx --yes wait-on -t 60000 http://127.0.0.1:3000/health || (echo '--- backend.log ---'; cat backend.log; exit 1)
 
       - name: Servir build do frontend em background
         run: |
-          npm --prefix frontend exec -- vite preview --host 0.0.0.0 --port 5173 --strictPort > frontend.log 2>&1 &
+          npx --yes serve -s frontend/dist -l 5173 --no-clipboard --no-port-switching > frontend.log 2>&1 &
           echo $! > frontend.pid
-          npx --yes wait-on -t 60000 http://127.0.0.1:5173
+          npx --yes wait-on -t 60000 http://127.0.0.1:5173 || (echo '--- frontend.log ---'; cat frontend.log; exit 1)
 
       - name: Rodar Cypress
         uses: cypress-io/github-action@v6
