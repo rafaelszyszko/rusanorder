@@ -236,8 +236,8 @@ CREATE TABLE notification_preferences (
 -- USUÁRIO ADMIN (senha: admin123)
 -- ============================================================
 INSERT INTO users (name, email, password, role) VALUES
-('Administrador', 'admin@rusan.com', '$2a$10$8K1p/a0dR1xqM8k.8QkKCOq5r2YhUQCFjlnGm8B8gYIYq.SzTfGi', 'admin'),
-('Usuário Teste', 'user@rusan.com', '$2a$10$8K1p/a0dR1xqM8k.8QkKCOq5r2YhUQCFjlnGm8B8gYIYq.SzTfGi', 'user');
+('Administrador', 'admin@rusan.com', '$2b$10$r2/2D7BTA7AkPe0eLQ6PDuFbLqP6zLwHNt94PRnwZnFKDYBSYGQ/S', 'admin'),
+('Usuário Teste', 'user@rusan.com', '$2b$10$r2/2D7BTA7AkPe0eLQ6PDuFbLqP6zLwHNt94PRnwZnFKDYBSYGQ/S', 'user');
 
 -- ============================================================
 -- 5 CLIENTES FICTÍCIOS
